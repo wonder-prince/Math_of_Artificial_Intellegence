@@ -1,0 +1,62 @@
+{
+  "unittest": {
+    "success": true,
+    "run": 21,
+    "failures": 0,
+    "errors": 0,
+    "log": "tests.log"
+  },
+  "checks": {
+    "all_rates_finite": true,
+    "calibration_runs": 1800,
+    "orthogonality_max": 4.419575816427823e-12,
+    "sse_decomposition_max": 3.922195901395753e-12,
+    "all_figure_files_nonempty": true,
+    "no_network_required": true
+  },
+  "core_synthetic_match_previous_same_config": true,
+  "analytic_variance_reference": [
+    {
+      "rho": 0.0,
+      "future_noise_sum_variance": 20.0,
+      "prediction_error_sum_variance": 22.208327618078243,
+      "iid_reference_h_plus_c_squared": 22.208327618078243
+    },
+    {
+      "rho": 0.6,
+      "future_noise_sum_variance": 72.50027421188301,
+      "prediction_error_sum_variance": 79.80729390266832,
+      "iid_reference_h_plus_c_squared": 22.208327618078243
+    }
+  ],
+  "data_availability": {
+    "status": "blocked_permission",
+    "reason": "HTTP 403 Forbidden；端点拒绝访问，已停止下载。",
+    "record_path": "data/download_validation.json",
+    "download_validation": {
+      "status": "blocked_permission",
+      "attempt_completed_at": "2026-11-13T10:14:08.686+00:00",
+      "provider": "Yahoo Finance",
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/NVDA?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+      "http_status": 403,
+      "error": "HTTP 403 Forbidden；端点拒绝访问，已停止下载。",
+      "rows": 0,
+      "original_artifacts": [],
+      "verified_prices_created": false,
+      "nasdaq_attempted": false,
+      "notes": [
+        "epoch由datetime.timestamp程序生成，开始2023-01-01 UTC，结束2026-01-01 UTC（右端不包含）。",
+        "未取得成功响应的原始JSON，未生成原件哈希或虚构行情。",
+        "遵循权限拒绝不得绕过或重试的要求，没有重试Yahoo，也没有转向Nasdaq。",
+        "Python启动还报告临时目录不可用的sitecustomize错误，但urllib请求实际已执行并返回HTTP 403。",
+        "目录检查命令另有Security Center临时文件删除拒绝，未重试该命令或删除操作。",
+        "转换脚本已保存；未运行全套实验，未修改既有代码。"
+      ]
+    },
+    "network_attempted_by_experiments": false
+  },
+  "numerical_fingerprint_sha256": "7ca2aeee698df9f75bbe136f4efe99f9f6c8a0e89eef504b42097b7dac5e163f",
+  "repeat_numerical_match_previous_same_environment_config_input": true,
+  "real_data_status": "not_provided",
+  "reproducibility": "固定种子、4条独立随机流、固定配置。数值结果在同环境可重现；日志时间、耗时、SVG元数据与哈希不保证逐字节一致。"
+}

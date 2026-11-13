@@ -1,0 +1,26 @@
+test_ar1_covariance_stationary_innovations (test_math.MathTests.test_ar1_covariance_stationary_innovations) ... ok
+test_ar1_sum_variance_exact_formula (test_math.MathTests.test_ar1_sum_variance_exact_formula) ... ok
+test_block_continuity_without_wrap (test_math.MathTests.test_block_continuity_without_wrap) ... ok
+test_bootstrap_degenerate_pool_and_distribution (test_math.MathTests.test_bootstrap_degenerate_pool_and_distribution) ... ok
+test_bootstrap_nonfinite_statistics_are_rejected (test_math.MathTests.test_bootstrap_nonfinite_statistics_are_rejected) ... ok
+test_chronological_no_leakage (test_math.MathTests.test_chronological_no_leakage) ... ok
+test_entropy_boundaries (test_math.MathTests.test_entropy_boundaries) ... ok
+test_entropy_counterexample (test_math.MathTests.test_entropy_counterexample) ... ok
+test_fixed_design_prediction_sum_weights_and_covariance (test_math.MathTests.test_fixed_design_prediction_sum_weights_and_covariance) ... ok
+test_known_truth_ols (test_math.MathTests.test_known_truth_ols) ... ok
+test_missing_prices_retains_download_failure_without_network (test_math.MathTests.test_missing_prices_retains_download_failure_without_network) ... ok
+test_no_future_y_in_bootstrap (test_math.MathTests.test_no_future_y_in_bootstrap) ... ok
+test_orthogonality_and_sse (test_math.MathTests.test_orthogonality_and_sse) ... ok
+test_pvalue_boundaries_and_ties (test_math.MathTests.test_pvalue_boundaries_and_ties) ... ok
+test_real_controlled_numerical_errors_and_unexpected_errors (test_math.MathTests.test_real_controlled_numerical_errors_and_unexpected_errors) ... ok
+test_real_data_evidence_gate (test_math.MathTests.test_real_data_evidence_gate) ... ok
+test_real_rank_deficient_window_is_recorded_and_continues (test_math.MathTests.test_real_rank_deficient_window_is_recorded_and_continues) ... ok
+test_real_rolling_interface_and_future_isolation (test_math.MathTests.test_real_rolling_interface_and_future_isolation) ... ok
+test_real_zero_residual_window_entropy_zero_and_continues (test_math.MathTests.test_real_zero_residual_window_entropy_zero_and_continues) ... ok
+test_refit_bootstrap_matches_manual (test_math.MathTests.test_refit_bootstrap_matches_manual) ... ok
+test_wilson_boundaries (test_math.MathTests.test_wilson_boundaries) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.015s
+
+OK

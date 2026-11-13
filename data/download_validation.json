@@ -1,0 +1,20 @@
+{
+  "status": "blocked_permission",
+  "attempt_completed_at": "2026-11-13T10:14:08.686+00:00",
+  "provider": "Yahoo Finance",
+  "url": "https://query1.finance.yahoo.com/v8/finance/chart/NVDA?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+  "http_status": 403,
+  "error": "HTTP 403 Forbidden；端点拒绝访问，已停止下载。",
+  "rows": 0,
+  "original_artifacts": [],
+  "verified_prices_created": false,
+  "nasdaq_attempted": false,
+  "notes": [
+    "epoch由datetime.timestamp程序生成，开始2023-01-01 UTC，结束2026-01-01 UTC（右端不包含）。",
+    "未取得成功响应的原始JSON，未生成原件哈希或虚构行情。",
+    "遵循权限拒绝不得绕过或重试的要求，没有重试Yahoo，也没有转向Nasdaq。",
+    "Python启动还报告临时目录不可用的sitecustomize错误，但urllib请求实际已执行并返回HTTP 403。",
+    "目录检查命令另有Security Center临时文件删除拒绝，未重试该命令或删除操作。",
+    "转换脚本已保存；未运行全套实验，未修改既有代码。"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "seed": 20261113,
+  "ntrain": 200,
+  "horizon": 20,
+  "beta": [0.3, 1.2, -0.7],
+  "design_rho": 0.5,
+  "ar_rhos": [0.0, 0.6],
+  "blocks": [1, 5, 10],
+  "M": 300,
+  "B": 999,
+  "alpha": 0.05,
+  "mean_shift": 0.8,
+  "variance_scale": 2.0,
+  "outlier_size": 8.0,
+  "collinearity_rhos": [0.0, 0.9, 0.999],
+  "collinearity_repeats": 200,
+  "entropy_windows": [50, 200, 1000],
+  "entropy_bins": [2, 4, 8, 16, 32]
+}
