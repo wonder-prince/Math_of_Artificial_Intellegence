@@ -1,20 +1,169 @@
 {
-  "status": "blocked_permission",
-  "attempt_completed_at": "2026-11-13T10:14:08.686+00:00",
+  "status": "passed",
   "provider": "Yahoo Finance",
-  "url": "https://query1.finance.yahoo.com/v8/finance/chart/NVDA?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
-  "http_status": 403,
-  "error": "HTTP 403 Forbidden；端点拒绝访问，已停止下载。",
-  "rows": 0,
-  "original_artifacts": [],
-  "verified_prices_created": false,
-  "nasdaq_attempted": false,
-  "notes": [
-    "epoch由datetime.timestamp程序生成，开始2023-01-01 UTC，结束2026-01-01 UTC（右端不包含）。",
-    "未取得成功响应的原始JSON，未生成原件哈希或虚构行情。",
-    "遵循权限拒绝不得绕过或重试的要求，没有重试Yahoo，也没有转向Nasdaq。",
-    "Python启动还报告临时目录不可用的sitecustomize错误，但urllib请求实际已执行并返回HTTP 403。",
-    "目录检查命令另有Security Center临时文件删除拒绝，未重试该命令或删除操作。",
-    "转换脚本已保存；未运行全套实验，未修改既有代码。"
+  "rows": 752,
+  "first_date": "2023-01-03",
+  "last_date": "2025-12-31",
+  "price_details": {
+    "NVDA": {
+      "field": "adjclose",
+      "null_dates": [],
+      "events": {
+        "dividends": {
+          "1678199400": {
+            "amount": 0.004,
+            "date": 1678199400
+          },
+          "1686144600": {
+            "amount": 0.004,
+            "date": 1686144600
+          },
+          "1694007000": {
+            "amount": 0.004,
+            "date": 1694007000
+          },
+          "1701786600": {
+            "amount": 0.004,
+            "date": 1701786600
+          },
+          "1709649000": {
+            "amount": 0.004,
+            "date": 1709649000
+          },
+          "1718112600": {
+            "amount": 0.01,
+            "date": 1718112600
+          },
+          "1726147800": {
+            "amount": 0.01,
+            "date": 1726147800
+          },
+          "1733409000": {
+            "amount": 0.01,
+            "date": 1733409000
+          },
+          "1741786200": {
+            "amount": 0.01,
+            "date": 1741786200
+          },
+          "1749648600": {
+            "amount": 0.01,
+            "date": 1749648600
+          },
+          "1757597400": {
+            "amount": 0.01,
+            "date": 1757597400
+          },
+          "1764858600": {
+            "amount": 0.01,
+            "date": 1764858600
+          }
+        },
+        "splits": {
+          "1718026200": {
+            "date": 1718026200,
+            "numerator": 10.0,
+            "denominator": 1.0,
+            "splitRatio": "10:1"
+          }
+        }
+      },
+      "price_basis": "Yahoo adjclose，供应商拆股和现金分红复权；不再进行拆股或股息调整"
+    },
+    "SPY": {
+      "field": "adjclose",
+      "null_dates": [],
+      "events": {
+        "dividends": {
+          "1679059800": {
+            "amount": 1.506,
+            "date": 1679059800
+          },
+          "1686922200": {
+            "amount": 1.638,
+            "date": 1686922200
+          },
+          "1694784600": {
+            "amount": 1.583,
+            "date": 1694784600
+          },
+          "1702650600": {
+            "amount": 1.906,
+            "date": 1702650600
+          },
+          "1710509400": {
+            "amount": 1.595,
+            "date": 1710509400
+          },
+          "1718976600": {
+            "amount": 1.759,
+            "date": 1718976600
+          },
+          "1726839000": {
+            "amount": 1.746,
+            "date": 1726839000
+          },
+          "1734705000": {
+            "amount": 1.966,
+            "date": 1734705000
+          },
+          "1742563800": {
+            "amount": 1.696,
+            "date": 1742563800
+          },
+          "1750426200": {
+            "amount": 1.761,
+            "date": 1750426200
+          },
+          "1758288600": {
+            "amount": 1.831,
+            "date": 1758288600
+          },
+          "1766154600": {
+            "amount": 1.993,
+            "date": 1766154600
+          }
+        }
+      },
+      "price_basis": "Yahoo adjclose，供应商拆股和现金分红复权；不再进行拆股或股息调整"
+    }
+  },
+  "unmatched_dates": {
+    "NVDA": [],
+    "SPY": []
+  },
+  "gaps_over_7_days": [],
+  "attempts_failed": [],
+  "original_artifacts": [
+    {
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/NVDA?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+      "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/NVDA?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+      "retrieved_at": "2026-11-13T11:20:32.987925+00:00",
+      "artifact": "yahoo_NVDA_2023_2025.json",
+      "sha256": "d183f64b88f076f55a3b5767bfd5c1bcea18b674f8278ebaac80a79834e79d5b",
+      "bytes": 85430
+    },
+    {
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+      "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=1672531200&period2=1767225600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+      "retrieved_at": "2026-11-13T11:20:34.557839+00:00",
+      "artifact": "yahoo_SPY_2023_2025.json",
+      "sha256": "a9ea252b5231379b220b5b0287d9060bcecb6859ae0a9e44b089715a4275eeaa",
+      "bytes": 82728
+    }
+  ],
+  "verified_prices_sha256": "a0dc358ff9f2b6e64cbca1b7a7f6b2bbbb155d3a5d9cd6fbaf5841b44e50574f",
+  "checks": [
+    "HTTPS原始响应逐字节归档及SHA256",
+    "共同交易日不少于221",
+    "日期唯一递增且间隔不超过7天",
+    "正数有限价格",
+    "现有load_verified门控通过",
+    "原始数据转换逐行复核"
+  ],
+  "limitations": [
+    "未独立对照交易所交易日历，不将节假日当作缺数",
+    "未进行第二供应商价格交叉验证",
+    "复权价格按下载时供应商历史调整口径，未构建当时可得价格数据库"
   ]
 }

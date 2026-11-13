@@ -125,7 +125,7 @@ def main():
     logging.shutdown()
     files = sorted(p for p in ROOT.rglob('*') if p.is_file() and '.venv' not in p.parts
                    and '.git' not in p.parts and '__pycache__' not in p.parts
-                   and p.name != 'manifest.sha256')
+                   and p.name not in ('manifest.sha256', '.DS_Store'))
     manifest = ''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+str(p.relative_to(ROOT))+'\n' for p in files)
     (ROOT/'manifest.sha256').write_text(manifest, encoding='utf-8')
 

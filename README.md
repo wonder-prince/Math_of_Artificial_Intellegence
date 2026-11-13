@@ -24,17 +24,30 @@ python3 -m venv .venv
 .venv/bin/python run_experiments.py
 ```
 
-安装依赖需要网络；安装完成后，实验计算和已归档真实数据处理不访问网络。不依赖 pandas。不联网拉取行情。每次运行更新本项目的 results.json、validation.json、图表、运行日志和 manifest.sha256，不触碰旧项目。不要在已有需要保存的实验产物目录中直接改配置后覆盖运行，先复制本项目（可不复制 .venv）。
+安装依赖需要网络；安装完成后，run_experiments.py 的实验计算和已归档真实数据处理不访问网络。不依赖 pandas。行情下载由独立的 download_data.py 完成。每次运行实验更新本项目的 results.json、validation.json、图表、运行日志和 manifest.sha256，不触碰旧项目。不要在已有需要保存的实验产物目录中直接改配置后覆盖运行，先复制本项目（可不复制 .venv）。
+
+下载 Yahoo Finance 的 NVDA/SPY 2023—2025 年日线复权价格：
+
+```bash
+.venv/bin/python download_data.py
+.venv/bin/python run_experiments.py
+```
+
+下载器使用 curl_cffi 的浏览器兼容 HTTPS 请求，并读取 macOS 系统代理或 HTTPS_PROXY/ALL_PROXY 环境配置，遵循代理绕过配置。Yahoo 对中国大陆直连返回停止服务页面时，需要使用能够访问 Yahoo 的现有网络出口；程序不硬编码代理地址。HTTP 401/403 会停止并记录原因，429 会记录限流及服务端 Retry-After，不连续重试同一请求。
+
+失败后可以再次运行同一下载命令：旧失败记录和未完成的响应原件移入 data/download_history/ 下的 UTC 时间戳目录，保留原字节及历史证据。已有 verified_prices.json 时先通过 load_verified 校验并复用，不再次联网或覆盖。下载成功会生成原始响应、download_bundle.json、verified_prices.json 和 download_validation.json；之后运行实验即可纳入真实数据。
 
 ## 文件
 
 - config.json：唯一默认实验配置，随机种子 20261113。
 - math_core.py：lstsq 回归、AR(1)、非循环块索引、残差 bootstrap、p 值、Wilson 区间、离散熵、时间切分。
 - experiments.py：三组数学实验；不涉及真实行情取数。
+- download_data.py：独立联网下载、原件归档、共同交易日对齐与输入验证；读取现有系统代理。
 - real_data.py：可选真实价格归档及下载证据校验，离线滚动回归。
 - plots.py：6 幅浅底英文图，每幅输出 PNG 和 SVG。
 - run_experiments.py：先跑测试，再执行全部实验，产出结果与清单。
-- tests/test_math.py：独立 unittest；包含真值回归、正交/SSE、熵边界与反例、p 值边界、块内时间连续且不绕回、实际重新拟合对照、未来 y 扰动不改变训练/零分布、日期顺序与缺口、证据门控；另测AR(1)解析协方差/累计方差、固定设计预测误差权重及交叉项符号、退化窗口继续滚动、非有限/点质量bootstrap拒绝和取数失败记录。I/O夹具全部在内存中，不写入虚构行情或临时证据文件。
+- tests/test_math.py：独立 unittest；包含真值回归、正交/SSE、熵边界与反例、p 值边界、块内时间连续且不绕回、实际重新拟合对照、未来 y 扰动不改变训练/零分布、日期顺序与缺口、证据门控；另测AR(1)解析协方差/累计方差、固定设计预测误差权重及交叉项符号、退化窗口继续滚动、非有限/点质量bootstrap拒绝和取数失败记录。数学测试的I/O夹具全部在内存中。
+- tests/test_download.py：模拟HTTP响应，核对系统代理、原件字节与哈希、权限/限流、失败留档重跑和成功复用；文件夹具仅写入自动清理的临时目录。
 - results.json：完整配置、版本、原始逐重复 p 值和 MC 标准误、拒绝率与 Wilson 区间、共线性逐次系数及 MSE、熵合成路径、固定设计和示意零分布。
 - validation.json / tests.log / run.log：验证结果与真实运行日志。
 - manifest.sha256：源码、配置、产物和可选归档数据的 SHA256；不含清单自身、.venv、字节码缓存。
@@ -113,7 +126,7 @@ python3 -m venv .venv
 
 重复、乱序日期或超过 7 自然日的缺口拒绝；其他缺失工作日列出供主代理对照交易所日历，不自动填充或跨缺口插值。周末/假日之间的收益是相邻观测收益，真实数据尚不等同于完全规则等时距 AR 过程。缺数据记录 not_provided；证据/结构不合格记录 rejected 并跳过真实计算。合成部分仍完整运行。
 
-若有 data/download_validation.json，离线读取并在real_data.data_availability和validation.json中保存原取数记录与失败原因。本次既有记录表明Yahoo Finance返回HTTP 403、rows=0，没有成功原件或verified_prices；因此保留not_provided，透明记录blocked_permission与HTTP403，不重试、不更换端点取数、不把下载尝试视为可用数据。上述JSON记录本身亦纳入最终哈希清单。
+若有 data/download_validation.json，离线读取并在real_data.data_availability和validation.json中保存取数记录。失败时保留not_provided及具体HTTP错误；下载成功且价格通过证据门控后才参与真实计算。早期的Yahoo HTTP 403失败记录保留在data/download_history中，不把失败尝试视为可用数据。下载记录和历史原件均纳入实验生成的最终哈希清单。
 
 本次保留NVDA/SPY双标的接口。自有滞后收益会使设计包含过去随机误差，在AR误差下不能直接沿用当前严格外生固定设计推断；因此未把单标的滞后模型作为未经校准的替代实证。
 

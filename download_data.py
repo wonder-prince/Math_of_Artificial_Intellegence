@@ -6,9 +6,10 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.parse import urlencode, urlsplit
+from urllib.request import getproxies, proxy_bypass
 from zoneinfo import ZoneInfo
+from curl_cffi import requests
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / 'data'
@@ -26,19 +27,25 @@ def save_json(path, doc):
 
 
 def fetch(url, name, records):
-    # 原件逐字节归档，解析前先保存；拒绝访问立即终止，不切换来源。
-    try:
-        with urlopen(Request(url, headers=HEADERS), timeout=45) as response:
-            raw = response.read()
-            final_url = response.geturl()
-    except HTTPError as exc:
-        if exc.code in (401, 403):
-            raise PermissionError(f'端点拒绝访问，停止下载：HTTP {exc.code} {url}') from exc
-        raise
-    stamp = datetime.now(timezone.utc).isoformat()
+    # curl_cffi不会自动读取macOS系统代理，显式采用系统/环境配置。
     artifact = DATA / name
     if artifact.exists():
         raise FileExistsError(f'不覆盖已有原件：{artifact}')
+    host = urlsplit(url).hostname
+    proxies = getproxies()
+    proxy = None if proxy_bypass(host) else proxies.get('https') or proxies.get('all')
+    response = requests.get(url, headers=HEADERS, impersonate='chrome', proxy=proxy, timeout=45)
+    if response.status_code in (401, 403):
+        raise PermissionError(f'端点拒绝访问，停止下载：HTTP {response.status_code} {url}；请检查系统代理出口是否可访问Yahoo')
+    if response.status_code >= 400:
+        reason = f'HTTP {response.status_code}'
+        if response.status_code == 429:
+            reason += '：请求过于频繁，请稍后重试'
+            if response.headers.get('Retry-After'):
+                reason += '；Retry-After=' + response.headers['Retry-After']
+        raise HTTPError(url, response.status_code, reason, response.headers, None)
+    raw, final_url = response.content, response.url
+    stamp = datetime.now(timezone.utc).isoformat()
     artifact.write_bytes(raw)
     records.append({'url': url, 'final_url': final_url, 'retrieved_at': stamp,
                     'artifact': name, 'sha256': sha(raw), 'bytes': len(raw)})
@@ -117,13 +124,7 @@ def nasdaq(symbol, records):
                   'price_basis': 'Nasdaq close；跨2024-06-10检查拆股连续性；现金分红未复权'}
 
 
-def main():
-    if not DATA.is_dir():
-        raise FileNotFoundError('项目data目录不存在')
-    for name in ('verified_prices.json', 'download_bundle.json', 'download_validation.json'):
-        if (DATA / name).exists():
-            raise FileExistsError(f'不覆盖已有归档：{name}')
-    records, failures = [], []
+def download(records, failures):
     series = details = None
     provider = None
     for provider, downloader in (('Yahoo Finance', yahoo), ('Nasdaq', nasdaq)):
@@ -141,7 +142,7 @@ def main():
                 'original_artifacts': records, 'rows': 0,
                 'limitations': ['权限拒绝后停止；未重试或切换来源；未生成verified_prices.json']})
             raise
-        except (HTTPError, URLError, TimeoutError, ValueError, KeyError) as exc:
+        except (HTTPError, URLError, TimeoutError, ValueError, KeyError, requests.exceptions.RequestException) as exc:
             failures.append({'provider': provider, 'error': str(exc)})
             series = None
     if series is None:
@@ -182,6 +183,36 @@ def main():
                                   '复权价格按下载时供应商历史调整口径，未构建当时可得价格数据库']}
     save_json(DATA / 'download_validation.json', validation)
     print(json.dumps({k: validation[k] for k in ('status', 'provider', 'rows', 'first_date', 'last_date', 'unmatched_dates')}, ensure_ascii=False))
+
+
+def main():
+    DATA.mkdir(parents=True, exist_ok=True)
+    verified = DATA / 'verified_prices.json'
+    if verified.exists():
+        from real_data import load_verified
+        doc, dates, prices = load_verified(verified)
+        print(json.dumps({'status': 'reused_verified_download', 'source': doc['source'],
+                          'rows': len(prices), 'first_date': dates[0], 'last_date': dates[-1]}, ensure_ascii=False))
+        return
+    # 失败或未完成的尝试独立留档，避免旧失败记录永久阻止重新下载。
+    previous = [p for p in DATA.iterdir() if p.is_file() and (
+        p.name in ('download_bundle.json', 'download_validation.json')
+        or (p.name.startswith(('yahoo_', 'nasdaq_')) and p.name.endswith('_2023_2025.json')))]
+    if previous:
+        stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+        history = DATA / 'download_history' / stamp
+        history.mkdir(parents=True)
+        for path in previous:
+            path.rename(history / path.name)
+    records, failures = [], []
+    try:
+        download(records, failures)
+    except (OSError, ValueError, KeyError, RuntimeError, requests.exceptions.RequestException) as exc:
+        if not (DATA / 'download_validation.json').exists():
+            save_json(DATA / 'download_validation.json', {
+                'status': 'download_failed', 'retrieved_at': datetime.now(timezone.utc).isoformat(),
+                'error': str(exc), 'attempts_failed': failures, 'original_artifacts': records, 'rows': 0})
+        raise
 
 
 if __name__ == '__main__':

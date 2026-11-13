@@ -1,3 +1,10 @@
+test_existing_raw_file_is_checked_before_network (test_download.DownloadTests.test_existing_raw_file_is_checked_before_network) ... ok
+test_failed_attempt_is_archived_and_can_run_again (test_download.DownloadTests.test_failed_attempt_is_archived_and_can_run_again) ... ok
+test_fetch_uses_system_proxy_and_archives_exact_bytes (test_download.DownloadTests.test_fetch_uses_system_proxy_and_archives_exact_bytes) ... ok
+test_permission_denied_does_not_archive_html (test_download.DownloadTests.test_permission_denied_does_not_archive_html) ... ok
+test_proxy_bypass_is_respected (test_download.DownloadTests.test_proxy_bypass_is_respected) ... ok
+test_rate_limit_is_reported_without_retries (test_download.DownloadTests.test_rate_limit_is_reported_without_retries) ... ok
+test_successful_download_is_validated_and_reused_without_network (test_download.DownloadTests.test_successful_download_is_validated_and_reused_without_network) ... ok
 test_ar1_covariance_stationary_innovations (test_math.MathTests.test_ar1_covariance_stationary_innovations) ... ok
 test_ar1_sum_variance_exact_formula (test_math.MathTests.test_ar1_sum_variance_exact_formula) ... ok
 test_block_continuity_without_wrap (test_math.MathTests.test_block_continuity_without_wrap) ... ok
@@ -21,6 +28,6 @@ test_refit_bootstrap_matches_manual (test_math.MathTests.test_refit_bootstrap_ma
 test_wilson_boundaries (test_math.MathTests.test_wilson_boundaries) ... ok
 
 ----------------------------------------------------------------------
-Ran 21 tests in 0.015s
+Ran 28 tests in 0.022s
 
 OK
